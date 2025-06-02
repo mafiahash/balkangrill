@@ -20,3 +20,39 @@
 		}
 	}
 })()
+
+// ───────────────────────────────────────────────────────────
+// /contacts → вставляем "Адрес: ул. Шмидта, д. 20" в карточку
+// ───────────────────────────────────────────────────────────
+if (location.pathname === '/contacts') {
+	const card = document.querySelector('.sp-left .sp-card')
+	// чтобы не плодить дубликаты
+	const already = card
+		?.querySelector('.sp-condition-value')
+		?.textContent.includes('Шмидта')
+
+	if (card && !already) {
+		// <div class="sp-separator"></div>
+		card.appendChild(
+			Object.assign(document.createElement('div'), {
+				className: 'sp-separator',
+			})
+		)
+
+		// <div class="sp-condition-2"><span>Адрес</span> … </div>
+		const wrapper = Object.assign(document.createElement('div'), {
+			className: 'sp-condition-2',
+		})
+
+		const label = document.createElement('span')
+		label.textContent = 'Адрес'
+
+		const value = Object.assign(document.createElement('span'), {
+			className: 'sp-condition-value',
+			textContent: 'г. Ейск, ул. Шмидта, д. 20',
+		})
+
+		wrapper.append(label, value)
+		card.appendChild(wrapper)
+	}
+}
