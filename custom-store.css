@@ -1,0 +1,135 @@
+/* custom-store.css */
+.bottom-footer .logo-wrapper {
+	display: none !important;
+}
+.smartomato-promotion-link {
+	display: none !important;
+}
+.bandeatos-container {
+	box-shadow: none !important;
+}
+#smartomato-application input {
+	border-bottom: 1px solid #8c8c8c !important;
+}
+#smartomato-application textarea {
+	border-bottom: 1px solid #8c8c8c !important;
+	background: transparent !important;
+	color: #ffffff !important;
+}
+#smartomato-application input:focus {
+	border-bottom: 1px solid #fff !important;
+}
+#smartomato-application textarea:focus {
+	border-bottom: 1px solid #fff !important;
+}
+.sm-payment-options img {
+	filter: invert(100%) !important;
+}
+.delivery-at {
+	color: #ffffff;
+}
+body.new-widget
+	#smartomato-application
+	.sm-modal-overlay
+	.configurator-modal
+	.container-body
+	.configuration-list
+	.configuration
+	.option-list.sm-stepper-group
+	.sm-option
+	.sm-label.has-nothing
+	.sm-stepper
+	button.add {
+	background: #d10d10 !important;
+	color: #ffffff !important;
+}
+
+/* ---------- Extra tweaks ---------- */
+.delivery-at {
+	color: #ffffff;
+}
+
+.new-widget
+	#smartomato-application
+	.sm-modal-overlay
+	.sm-modal-dialog.order-info-modal
+	.summary
+	.total
+	.value
+	.total-price-discount {
+	align-items: baseline !important;
+}
+
+.burger-menu {
+	font-size: 18px !important;
+}
+
+/* Иконка перед графиком работы */
+.holder-nav nav.nav ul li:last-child a::before {
+	content: '';
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	background-image: url('https://53a7276f-d68f-462e-a2bf-df223e005be4.selstorage.ru/uploads/organization_common_photo/photo/5581/elements.png');
+	background-size: cover;
+	margin-right: 10px;
+	margin-bottom: -4px;
+	pointer-events: none !important;
+}
+
+/* Адаптивная навигация */
+.holder-nav nav.nav {
+	padding: 14px 0 !important;
+	width: calc(100% - 32px) !important;
+	margin: 0 auto;
+	max-width: 1200px;
+}
+ul.menu-pages {
+	width: 100% !important;
+	padding: 0 16px;
+	box-sizing: border-box;
+}
+nav.nav ul.menu-pages li:last-child {
+	margin-left: auto !important;
+}
+.holder-nav nav.nav ul li:last-child a {
+	font-weight: 500;
+	font-size: 18px !important;
+	color: #fff !important;
+	opacity: inherit !important;
+	pointer-events: none !important;
+}
+
+@media (max-width: 768px) {
+	.menu-pages li:last-child {
+		display: none;
+	}
+	.holder-nav nav.nav {
+		width: calc(100% - 16px) !important;
+		padding: 10px 8px !important;
+	}
+	#smartomato-application .sm-modal-overlay .close-modal-wrapper {
+		background: none !important;
+	}
+	.new-widget #smartomato-application .sm-modal-overlay .close-modal-wrapper {
+		padding: 0 !important;
+	}
+}
+
+/* Футер */
+#footer li:has(a[href^='tel:']) {
+	display: none;
+}
+.nav-footer .nav-footer-block:nth-child(2),
+.nav-footer .nav-footer-block:nth-child(3) {
+	pointer-events: none;
+}
+.nav-footer-block {
+	font-size: 16px !important;
+	white-space: pre-wrap !important;
+}
+.nav-footer-block ul.bold {
+	font-size: 16px !important;
+	line-height: 140% !important;
+	font-weight: 600 !important;
+}
