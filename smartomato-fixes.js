@@ -25,14 +25,19 @@
 // /contacts → вставляем "Адрес: ул. Шмидта, д. 20" в карточку
 // Работает и при обычной загрузке, и при переходах внутри Nuxt
 // ───────────────────────────────────────────────────────────
-const patchContacts = () => {
-	// выходим, если мы не на /contacts
+const patchContacts = (attempt = 0) => {
+	// работаем только на /contacts
 	if (location.pathname !== '/contacts') return
 
+	// ждём, пока Nuxt дорендерит карточку:
 	const card = document.querySelector('.sp-left .sp-card')
-	if (!card) return
+	if (!card) {
+		// пробуем ещё до 50 раз с интервалом 100 мс
+		if (attempt < 50) setTimeout(() => patchContacts(attempt + 1), 100)
+		return
+	}
 
-	// не добавляем блок повторно
+	// не вставляем повторно
 	const already = card
 		.querySelector('.sp-condition-value')
 		?.textContent.includes('Шмидта')
