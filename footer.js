@@ -1,5 +1,6 @@
 // footer.js — добавляет адрес в футер и следит, чтобы он не пропадал
 ;(() => {
+	let observer // will hold MutationObserver instance
 	// одноразовая вставка (если нужен ещё раз — просто вызови снова)
 	const ensureFooterAddress = () => {
 		const footer = document.querySelector('footer')
@@ -12,7 +13,11 @@
 		if (!ul) return
 
 		// уже есть — выходим
-		if (ul.querySelector('a')?.textContent.includes('Шмидта')) return
+		if (ul.querySelector('a')?.textContent.includes('Шмидта')) {
+			// адрес уже есть — дальнейшее наблюдение не нужно
+			if (observer) observer.disconnect()
+			return
+		}
 
 		const li = document.createElement('li')
 		li.setAttribute('data-v-e83b95b6', '')
@@ -30,6 +35,6 @@
 	ensureFooterAddress()
 
 	// MutationObserver — если Nuxt перерисует футер, добавим адрес снова
-	const observer = new MutationObserver(ensureFooterAddress)
+	observer = new MutationObserver(ensureFooterAddress)
 	observer.observe(document.body, { childList: true, subtree: true })
 })()
