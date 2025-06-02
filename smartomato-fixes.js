@@ -3,6 +3,8 @@
    ▸ заменяет картинку на /about
 */
 
+if (window.__SMARTOMATO_FIXES_APPLIED__) return
+window.__SMARTOMATO_FIXES_APPLIED__ = true
 ;(() => {
 	// GTM/analytics dataLayer – если нужно, можно расширять здесь
 	window.dataLayer = window.dataLayer || []
@@ -25,38 +27,48 @@
 // /contacts → вставляем "Адрес: ул. Шмидта, д. 20" в карточку
 // Работает и при обычной загрузке, и при переходах внутри Nuxt
 // ───────────────────────────────────────────────────────────
-const patchContacts = (attempt = 0) => {
-	// работаем только на /contacts
+const patchContacts = () => {
+	// work only on /contacts
 	if (location.pathname !== '/contacts') return
 
-	// ждём, пока Nuxt дорендерит карточку:
-	const card = document.querySelector('.sp-left .sp-card')
-	if (!card) {
-		// пробуем ещё до 50 раз с интервалом 100 мс
-		if (attempt < 50) setTimeout(() => patchContacts(attempt + 1), 100)
+	const insertAddress = card => {
+		if (!card) return
+		const already = card
+			.querySelector('.sp-condition-value')
+			?.textContent.includes('Шмидта')
+		if (already) return
+
+		card.appendChild(
+			Object.assign(document.createElement('div'), {
+				className: 'sp-separator',
+			})
+		)
+
+		const wrapper = Object.assign(document.createElement('div'), {
+			className: 'sp-condition-2',
+		})
+		wrapper.innerHTML =
+			'<span>Адрес</span><span class="sp-condition-value">г. Ейск, ул. Шмидта, д. 20</span>'
+
+		card.appendChild(wrapper)
+	}
+
+	// if card is already on the page — patch instantly
+	const existing = document.querySelector('.sp-left .sp-card')
+	if (existing) {
+		insertAddress(existing)
 		return
 	}
 
-	// не вставляем повторно
-	const conditionEl = card.querySelector('.sp-condition-value')
-	const already = conditionEl && conditionEl.textContent.includes('Шмидта')
-	if (already) return
-
-	// <div class="sp-separator"></div>
-	card.appendChild(
-		Object.assign(document.createElement('div'), {
-			className: 'sp-separator',
-		})
-	)
-
-	// <div class="sp-condition-2"><span>Адрес</span><span class="sp-condition-value">…</span></div>
-	const wrapper = Object.assign(document.createElement('div'), {
-		className: 'sp-condition-2',
+	// otherwise watch until it appears once
+	const observer = new MutationObserver((_, obs) => {
+		const card = document.querySelector('.sp-left .sp-card')
+		if (card) {
+			insertAddress(card)
+			obs.disconnect()
+		}
 	})
-	wrapper.innerHTML =
-		'<span>Адрес</span><span class="sp-condition-value">г. Ейск, ул. Шмидта, д. 20</span>'
-
-	card.appendChild(wrapper)
+	observer.observe(document.body, { childList: true, subtree: true })
 }
 
 // первый запуск после загрузки
@@ -64,6 +76,8 @@ patchContacts()
 
 // отслеживаем навигацию внутри Nuxt (history.pushState + popstate)
 ;(function enableRouteWatcher() {
+	if (history._smartomatoPatched) return
+	history._smartomatoPatched = true
 	const originalPushState = history.pushState
 	history.pushState = function () {
 		originalPushState.apply(this, arguments)

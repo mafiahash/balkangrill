@@ -1,3 +1,5 @@
+if (window.__SMARTOMATO_FOOTER_APPLIED__) return
+window.__SMARTOMATO_FOOTER_APPLIED__ = true
 // footer.js — добавляет адрес в футер и следит, чтобы он не пропадал
 ;(() => {
 	let observer // will hold MutationObserver instance
@@ -37,5 +39,5 @@
 
 	// MutationObserver — если Nuxt перерисует футер, добавим адрес снова
 	observer = new MutationObserver(ensureFooterAddress)
-	observer.observe(document.body, { childList: true, subtree: true })
+	observer.observe(footer, { childList: true, subtree: true })
 })()
