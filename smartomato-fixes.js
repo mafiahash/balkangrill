@@ -38,9 +38,8 @@ const patchContacts = (attempt = 0) => {
 	}
 
 	// не вставляем повторно
-	const already = card
-		.querySelector('.sp-condition-value')
-		?.textContent.includes('Шмидта')
+	const conditionEl = card.querySelector('.sp-condition-value')
+	const already = conditionEl && conditionEl.textContent.includes('Шмидта')
 	if (already) return
 
 	// <div class="sp-separator"></div>

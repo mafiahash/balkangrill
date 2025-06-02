@@ -13,7 +13,8 @@
 		if (!ul) return
 
 		// уже есть — выходим
-		if (ul.querySelector('a')?.textContent.includes('Шмидта')) {
+		const anchor = ul.querySelector('a')
+		if (anchor && anchor.textContent.includes('Шмидта')) {
 			// адрес уже есть — дальнейшее наблюдение не нужно
 			if (observer) observer.disconnect()
 			return
