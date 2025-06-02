@@ -22,37 +22,52 @@
 })()
 
 // ───────────────────────────────────────────────────────────
-// /contacts → вставляем "Адрес: ул. Шмидта, д. 20" в карточку
+// /contacts → вставляем "Адрес: ул. Шмидта, д. 20" в карточку
+// Работает и при обычной загрузке, и при переходах внутри Nuxt
 // ───────────────────────────────────────────────────────────
-if (location.pathname === '/contacts') {
+const patchContacts = () => {
+	// выходим, если мы не на /contacts
+	if (location.pathname !== '/contacts') return
+
 	const card = document.querySelector('.sp-left .sp-card')
-	// чтобы не плодить дубликаты
+	if (!card) return
+
+	// не добавляем блок повторно
 	const already = card
-		?.querySelector('.sp-condition-value')
+		.querySelector('.sp-condition-value')
 		?.textContent.includes('Шмидта')
+	if (already) return
 
-	if (card && !already) {
-		// <div class="sp-separator"></div>
-		card.appendChild(
-			Object.assign(document.createElement('div'), {
-				className: 'sp-separator',
-			})
-		)
-
-		// <div class="sp-condition-2"><span>Адрес</span> … </div>
-		const wrapper = Object.assign(document.createElement('div'), {
-			className: 'sp-condition-2',
+	// <div class="sp-separator"></div>
+	card.appendChild(
+		Object.assign(document.createElement('div'), {
+			className: 'sp-separator',
 		})
+	)
 
-		const label = document.createElement('span')
-		label.textContent = 'Адрес'
+	// <div class="sp-condition-2"><span>Адрес</span><span class="sp-condition-value">…</span></div>
+	const wrapper = Object.assign(document.createElement('div'), {
+		className: 'sp-condition-2',
+	})
+	wrapper.innerHTML =
+		'<span>Адрес</span><span class="sp-condition-value">г. Ейск, ул. Шмидта, д. 20</span>'
 
-		const value = Object.assign(document.createElement('span'), {
-			className: 'sp-condition-value',
-			textContent: 'г. Ейск, ул. Шмидта, д. 20',
-		})
-
-		wrapper.append(label, value)
-		card.appendChild(wrapper)
-	}
+	card.appendChild(wrapper)
 }
+
+// первый запуск после загрузки
+patchContacts()
+
+// отслеживаем навигацию внутри Nuxt (history.pushState + popstate)
+;(function enableRouteWatcher() {
+	const originalPushState = history.pushState
+	history.pushState = function () {
+		originalPushState.apply(this, arguments)
+		window.dispatchEvent(new Event('locationchange'))
+	}
+
+	window.addEventListener('popstate', () =>
+		window.dispatchEvent(new Event('locationchange'))
+	)
+	window.addEventListener('locationchange', patchContacts)
+})()

@@ -15,8 +15,10 @@
 	const a = document.createElement('a')
 	a.href = '/'
 	a.setAttribute('data-v-e83b95b6', '')
-	a.textContent = 'Адрес: ул. Шмидта 20'
+	a.textContent = 'Адрес: ул. Шмидта, д. 20'
 
 	li.appendChild(a)
-	ul.appendChild(li)
+	if (!ul.querySelector('a')?.textContent.includes('Шмидта')) {
+		ul.appendChild(li)
+	}
 })()
