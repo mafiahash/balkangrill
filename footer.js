@@ -1,47 +1,39 @@
-if (window.__SMARTOMATO_FOOTER_APPLIED__) return
-window.__SMARTOMATO_FOOTER_APPLIED__ = true
-// footer.js — добавляет адрес в футер и следит, чтобы он не пропадал
-;(() => {
-	let observer // MutationObserver instance
-	let footer = null // will hold <footer> element reference
-
-	// одноразовая вставка (если нужен ещё раз — просто вызови снова)
-	const ensureFooterAddress = () => {
-		// получаем актуальный <footer> каждый раз — Nuxt может пересоздать узел
-		footer = document.querySelector('footer')
-		if (!footer) return
-
-		const blocks = footer.querySelectorAll('.nav-footer-block')
+;(function () {
+	/**
+	 * Injects the address into the 2‑nd .nav-footer-block -> ul
+	 * Works on initial load and after Nuxt client‑side navigations.
+	 */
+	function injectAddress() {
+		const blocks = document.querySelectorAll('.nav-footer-block ul')
 		if (blocks.length < 2) return
 
-		const ul = blocks[1].querySelector('ul')
-		if (!ul) return
-
-		// уже есть — выходим
-		const anchor = ul.querySelector('a')
-		if (anchor && anchor.textContent.includes('Шмидта')) {
-			// адрес уже есть — дальнейшее наблюдение не нужно
-			if (observer) observer.disconnect()
-			return
-		}
+		const ul = blocks[1]
+		if (ul.querySelector('li[data-custom-address]')) return // already added
 
 		const li = document.createElement('li')
-		li.setAttribute('data-v-e83b95b6', '')
-
-		const a = document.createElement('a')
-		a.href = '/'
-		a.setAttribute('data-v-e83b95b6', '')
-		a.textContent = 'Адрес: ул. Шмидта, д. 20'
-
-		li.appendChild(a)
+		li.setAttribute('data-custom-address', '')
+		li.innerHTML = '<a href="/">Адрес: ул. Шмидта 20</a>'
 		ul.appendChild(li)
 	}
 
-	// первый запуск после загрузки
-	ensureFooterAddress()
+	/* --- initial DOM ready --- */
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', injectAddress, { once: true })
+	} else {
+		injectAddress()
+	}
 
-	// MutationObserver — если Nuxt перерисует футер, добавим адрес снова
-	observer = new MutationObserver(ensureFooterAddress)
-	// наблюдаем за всем телом — так поймаем появление футера, если его ещё нет
+	/* --- observe DOM changes (Nuxt can re‑render footer on navigation) --- */
+	const observer = new MutationObserver(injectAddress)
 	observer.observe(document.body, { childList: true, subtree: true })
+
+	/* --- Nuxt router hook (extra safety) --- */
+	const nuxtPoll = setInterval(() => {
+		if (window.$nuxt && window.$nuxt.$router) {
+			window.$nuxt.$router.afterEach(() => {
+				requestAnimationFrame(injectAddress)
+			})
+			clearInterval(nuxtPoll)
+		}
+	}, 150)
 })()
