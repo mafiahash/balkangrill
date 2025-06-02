@@ -34,9 +34,9 @@
 		const separator = document.createElement('div')
 		separator.className = 'sp-separator'
 
-		// Insert right after the original address
-		ref.after(address)
-		address.after(separator)
+		// Insert separator and new address right after the original address
+		ref.after(separator)
+		separator.after(address)
 	}
 
 	// Run once on ready
