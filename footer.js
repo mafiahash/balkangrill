@@ -2,10 +2,13 @@ if (window.__SMARTOMATO_FOOTER_APPLIED__) return
 window.__SMARTOMATO_FOOTER_APPLIED__ = true
 // footer.js — добавляет адрес в футер и следит, чтобы он не пропадал
 ;(() => {
-	let observer // will hold MutationObserver instance
+	let observer // MutationObserver instance
+	let footer = null // will hold <footer> element reference
+
 	// одноразовая вставка (если нужен ещё раз — просто вызови снова)
 	const ensureFooterAddress = () => {
-		const footer = document.querySelector('footer')
+		// получаем актуальный <footer> каждый раз — Nuxt может пересоздать узел
+		footer = document.querySelector('footer')
 		if (!footer) return
 
 		const blocks = footer.querySelectorAll('.nav-footer-block')
@@ -39,5 +42,6 @@ window.__SMARTOMATO_FOOTER_APPLIED__ = true
 
 	// MutationObserver — если Nuxt перерисует футер, добавим адрес снова
 	observer = new MutationObserver(ensureFooterAddress)
-	observer.observe(footer, { childList: true, subtree: true })
+	// наблюдаем за всем телом — так поймаем появление футера, если его ещё нет
+	observer.observe(document.body, { childList: true, subtree: true })
 })()

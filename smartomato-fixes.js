@@ -29,7 +29,7 @@ window.__SMARTOMATO_FIXES_APPLIED__ = true
 // ───────────────────────────────────────────────────────────
 const patchContacts = () => {
 	// work only on /contacts
-	if (location.pathname !== '/contacts') return
+	if (!location.pathname.includes('/contacts')) return
 
 	const insertAddress = card => {
 		if (!card) return
@@ -61,11 +61,10 @@ const patchContacts = () => {
 	}
 
 	// otherwise watch until it appears once
-	const observer = new MutationObserver((_, obs) => {
+	const observer = new MutationObserver(() => {
 		const card = document.querySelector('.sp-left .sp-card')
 		if (card) {
 			insertAddress(card)
-			obs.disconnect()
 		}
 	})
 	observer.observe(document.body, { childList: true, subtree: true })
