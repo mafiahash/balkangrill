@@ -34,7 +34,7 @@
 	overlay.id = 'site-down-overlay'
 	overlay.innerHTML = `
     <div>САЙТ ВРЕМЕННО НЕ РАБОТАЕТ</div>
-    <a href="tel:+79530925555">+7 (953) 092-55-55</a>
+    <div>ЗАКАЗЫ ПРИНИМАЕМ ПО ТЕЛЕФОНУ: <a href="tel:+79530925555">+7 (953) 092-55-55</a></div>
   `
 
 	document.body.appendChild(overlay)
