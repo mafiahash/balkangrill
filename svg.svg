@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="Avatar">
+	<defs>
+		<radialGradient id="g" cx="30%" cy="30%" r="80%">
+			<stop offset="0%" stop-color="#8be9fd"/>
+			<stop offset="60%" stop-color="#bd93f9"/>
+			<stop offset="100%" stop-color="#ff79c6"/>
+		</radialGradient>
+	</defs>
+
+	<circle cx="128" cy="128" r="120" fill="url(#g)"/>
+	<circle cx="128" cy="128" r="120" fill="none" stroke="#ffffff" stroke-opacity="0.6" stroke-width="8"/>
+
+	<text x="128" y="148" text-anchor="middle" font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial" font-size="64" font-weight="700" fill="#111827" opacity="0.85">
+    DS
+	</text>
+</svg>
